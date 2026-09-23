@@ -79,19 +79,20 @@ function renderTasks(tasks) {
         <p>Title:${task.title}<p>
         <p>Status:${task.status}</p>
         `;
+        //Creating a view button for the user
         const viewButton = document.createElement("button");
         viewButton.textContent = "View";
-        //button to get one task
+        //adding an addEventListener to make the view button clickable
         viewButton.addEventListener("click",function() {
-            console.log("This task ID is:" ,task.id);
             getSingleTask(task.id);
         });
+        //connecting the child class to the parent child using appendChild
         taskDiv.appendChild(viewButton);
         taskList.appendChild(taskDiv);
     });
 
 }
-
+//renderd tasks to be dispalyed on the screen
 renderTasks([
     {
         id:1,
@@ -108,3 +109,24 @@ async function getSingleTask(taskId) {
     const task = await response.json();
     console.log(task);
 };
+//POST method to add a new task
+async function createTask() {
+    const response = await fetch("https://jsonplaceholder.typicode.com/todos" , {
+        method:"POST",
+        headers: {
+            "Content-Type": " application/json"
+        },
+        body:JSON.stringify({
+            title:"Learn POST request",
+            completed:false,
+            userId: 1
+        })
+    });
+    const newTask = await response.json();
+    console.log("New task:",newTask);
+    newTask.status = newTask.completed ? "Completed"  :"Pending";
+    tasks.push(newTask);
+    console.log("Tasks after POST: ",tasks);
+    console.log("New  task title:", newTask.title);
+ renderTasks(tasks);
+}
