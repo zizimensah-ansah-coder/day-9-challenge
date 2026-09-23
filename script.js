@@ -71,23 +71,40 @@ function renderTasks(tasks) {
     
     taskList.innerHTML="";
     //displaying each tasks
-    tasks.forEach(function(tasks) {
+    tasks.forEach(function(task) {
+        console.log("FULL TASK: " ,task);
         const taskDiv =document.createElement("div");
         taskDiv.innerHTML = `
-        <h4>${tasks.title} </h4>
-        <p>Status:${tasks.status}</p>
+        <p>Id:${task.id}</p>
+        <p>Title:${task.title}<p>
+        <p>Status:${task.status}</p>
         `;
+        const viewButton = document.createElement("button");
+        viewButton.textContent = "View";
+        //button to get one task
+        viewButton.addEventListener("click",function() {
+            console.log("This task ID is:" ,task.id);
+            getSingleTask(task.id);
+        });
+        taskDiv.appendChild(viewButton);
         taskList.appendChild(taskDiv);
     });
+
 }
 
 renderTasks([
     {
-        title:"Test task",
+        id:1,
+        title:"Go to the gym",
         status:"Pending"
-    },
-    {
-        title:"Go for shopping",
-        status:"Completed"
     }
 ]);
+
+//Creating a getSingleTask
+async function getSingleTask(taskId) {
+    const response = await fetch(
+        `https://jsonplaceholder.typicode.com/todos/${taskId}`
+    );
+    const task = await response.json();
+    console.log(task);
+};
